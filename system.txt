@@ -1,0 +1,1865 @@
+Data Set Query – 1
+
+1. find document from country collection where population is less then 2 c.
+
+db.Country.find( { "population":{$lt:20000000} }, {"name":1,"population":1,"_id":0} )
+
+Output:-
+
+
+
+
+
+
+
+
+
+
+2 - find document from country collection where capital is Washington, D.C. 
+
+db.Country.find( { "capital":"Washington, D.C." }, {"name":1,"capital":1,"_id":0} ) 
+
+Output :
+
+
+
+
+
+
+3 - find document where capital is Canberra country is US. 
+
+db.Country.find( { "capital":"Canberra", "name":"United States" }, {"name":1,"capital":1,"_id":0} )
+
+Output:-
+
+
+ 
+4 - find document from country collection where population is Higher then 2 C and lower than 12 C. 
+
+db.Country.find( { "population":{$gt:20000000,$lt:120000000} }, {"name":1,"capital":1,"_id":0} ) 
+
+Output :
+
+
+
+
+
+
+
+5 - find document having capital which country is not US. 
+
+db.Country.find( { "country":{$nin:["United States"]} }, {"capital":1,"_id":0} ) 
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+
+
+6 - find document where capital is Washington, D.C. and country is US. 
+
+db.Country.find( {$and:[{"capital":"Washington, D.C."},{"name":"United States"}]} )
+
+Output:-
+ 
+
+
+
+
+7 - find document where capital is Washington, D.C. or Canberra 
+
+db.Country.find( {$or:[{"capital":"Washington, D.C."},{"capital":"Canberra"}]} ) 
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8 - find document where capital is Washington, D.C. or population is either 2 C or 12 C. 
+
+db.Country.find( {$or:[{"capital":"Washington,D.C."},{"population":20000000},{"population":120000000}]} )
+
+Output:-
+
+
+
+
+
+
+
+
+
+
+ 
+9 - find document where population is less then 12 C or population is 2 C or 3 C. 
+
+db.Country.find( {$or:[{population:{$lt:120000000}},{population:20000000},{population:30000000}]} ) 
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10 - find document where country is Australia and population is 12 C. 
+
+db.Country.find( {$and:[{name:"Australia"},{population:120000000}]} ) 
+
+Output :
+
+
+ 
+11 - find a document where the country is Australia not the US. 
+
+db.Country.find( {$and:[{name:"Australia"},{$nor:[{name:"United States"}]}]} )
+
+Output:-
+
+
+	
+
+
+
+
+
+
+
+ 
+Practical Assignment – 1
+
+1 - find document from country collection where population is less then 2 c.
+
+db.Country.find(
+ {
+"population":{$lt:20000000}
+},
+ {"name":1,"population":1,"_id":0}
+)
+Output :
+
+
+
+
+
+
+
+
+
+
+2 - find document from country collection where capital is Washington, D.C.
+db.Country.find(
+ {
+"capital":"Washington, D.C."
+},
+ {"name":1,"capital":1,"_id":0}
+)
+
+Output :
+
+
+
+
+
+
+ 
+3 - find document where capital is Canberra country is US.
+
+db.Country.find(
+ {
+"capital":"Canberra",
+"name":"United States"
+},
+ {"name":1,"capital":1,"_id":0}
+)
+
+Output :
+
+
+
+
+
+
+
+
+
+
+4 - find document from country collection where population is Higher then 2 C and lower than 12 C.
+
+db.Country.find(
+ {
+"population":{$gt:20000000,$lt:120000000}
+},
+ {"name":1,"capital":1,"_id":0}
+)
+
+Output :
+
+
+
+
+
+
+
+ 
+5 - find document having capital which country is not US.
+
+db.Country.find(
+ {
+"country":{$nin:["United States"]}
+},
+ {"capital":1,"_id":0}
+)
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+
+
+6 - find document where capital is Washington, D.C. and country is US.
+
+db.Country.find(
+ {$and:[{"capital":"Washington, D.C."},{"name":"United States"}]}
+)
+
+Output :
+
+
+
+
+
+
+
+
+
+
+ 
+7 - find document where capital is Washington, D.C. or Canberra
+
+db.Country.find(
+ {$or:[{"capital":"Washington, D.C."},{"capital":"Canberra"}]}
+)
+Output :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8 - find document where capital is Washington, D.C. or population is either 2 C or 12 C.
+db.Country.find(
+ {$or:[{"capital":"Washington, D.C."},{"population":20000000},{"population":120000000}]}
+)
+Output :
+
+
+
+
+
+
+
+
+
+
+ 
+9 - find document where population is less then 12 C or population is 2 C or 3 C.
+db.Country.find(
+ {$or:[{population:{$lt:120000000}},{population:20000000},{population:30000000}]}
+)
+Output :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10 - find document where country is Australia and population is 12 C.
+db.Country.find(
+ {$and:[{name:"Australia"},{population:120000000}]}
+)
+Output :
+
+
+
+
+
+
+
+
+
+
+
+ 
+11 - find a document where the country is Australia not the US.
+
+db.Country.find(
+ {$and:[{name:"Australia"},{$nor:[{name:"United States"}]}]}
+)
+
+Output :
+
+
+ 
+Assignment – 2
+1. Retrieve documents where the capital is either “Washington D.C.” or “Italy”. 
+
+db.Country.find({$or:[{capital:"washington, D.C."},{capital:"Italy"}]})
+
+Output:-
+
+{
+  _id: ObjectId("64b499e38b3bd9d868e9dab8"),
+  name: 'United States',
+  capital: 'washington, D.C.',
+  continent: 'North America',
+  language: 'English',
+  population: 328239523
+}
+
+2. Retrieve all the documents where the population is greater than 10 Lakhs and language is English or Japanese or Portuguese. 
+
+db.Country.find({$and:[{population:{$gt:1000000}},{$or:[{language:{$in:["English","Japanese","Potuguese"]}}]}]})
+
+Output:-
+
+{
+  _id: ObjectId("64b499e38b3bd9d868e9dab8"),
+  name: 'United States',
+  capital: 'washington, D.C.',
+  continent: 'North America',
+  language: 'English',
+  population: 328239523
+}
+{
+  _id: ObjectId("64b49b5c8b3bd9d868e9dab9"),
+  name: 'Australia',
+  capital: 'Canberra',
+  continent: 'Australia',
+  language: 'English',
+  population: 25681300
+}
+{
+  _id: ObjectId("64b49b5c8b3bd9d868e9daba"),
+  name: 'Japan',
+  capital: 'Tokyo',
+  continent: 'Asia',
+  language: 'Japanese',
+  population: 125960000
+}
+{
+  _id: ObjectId("64b49b5c8b3bd9d868e9dabb"),
+  Country: 'Brazil',
+  capital: 'Brazilia',
+  continent: 'South America',
+  language: 'Portuguese',
+  population: 210147125,
+  name: 'Brazil'
+}
+
+3. Retrieve all the documents where the population is less than 3 Crores and the continent is not Asia or North America or South America. 
+
+db.Country.find({$and:[{population:{$lt:30000000}},{$or:[{continent:{$nin:["Asia","North America","South America"]}}]}]})
+
+Output:-
+
+{
+  _id: ObjectId("64b49b5c8b3bd9d868e9dab9"),
+  name: 'Australia',
+  capital: 'Canberra',
+  continent: 'Australia',
+  language: 'English',
+  population: 25681300
+}
+
+4. Retrieve the first document where the language is Japanese and the continent is Asia and Capital is not Tokyo. 
+
+db.Country.find({$and:[{language:"Japanese"},{continent:"Asia"},{capital:{$ne:"Canberra"}}]})
+
+Output:-
+
+{
+  _id: ObjectId("64b49b5c8b3bd9d868e9daba"),
+  name: 'Japan',
+  capital: 'Tokyo',
+  continent: 'Asia',
+  language: 'Japanese',
+  population: 125960000
+}
+ 
+5. Insert documents having one additional field called geoLocation having two fields like longitude and latitude. 
+
+db.Country.insert({name: "India",  capital: "Delhi",  continent: "Asia",  language: "Hindi",  population: 1125960000,  geoLocation: {"longitude":"68°7' east to 97°25' east", "latitude":"8°4' north to 37°6' north"}})
+
+db.Country.updateMany({},{$unset:{geoLocation:" "}})
+
+db.Country.updateMany({},{$set:{geoLocation:[{longitude:55},{latitude:105}]}})
+
+Output:-
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("64d03de1012b8a48baf36cc5")
+  }
+}
+
+6. Retrieve the name of a country where longitude is 0 and less than 90 and latitude greater than 0 and less than 100. 
+
+db.Country.find({$and:[{"geoLocation.Longitude":{$lt:90}},{"geoLocation.Latitude":{$lt:120}}]})
+
+Output:-
+{
+  _id: ObjectId("64b49b5c8b3bd9d868e9dab9"),
+  name: 'Australia',
+  capital: 'Canberra',
+  continent: 'Australia',
+  language: 'English',
+  population: 25681300,
+  geoLocation: {
+    Longitude: 85,
+    Latitude: 110
+  }
+}
+{
+  _id: ObjectId("64b49b5c8b3bd9d868e9daba"),
+  name: 'Japan',
+  capital: 'Tokyo',
+  continent: 'Asia',
+  language: 'Japanese',
+  population: 125960000,
+  geoLocation: {
+    Longitude: 80,
+    Latitude: 115
+  }
+}
+
+7. Retrieve the geoLocation of countries where continent is “Asia” and language is “English” or “Hindi” 
+
+db.Country.find({$and:[{continent:{$eq:"Asia"}},{$or:[{language:{$in:["English","Hindi"]}}]}]},{geoLocation:1,_id:0})
+
+ 
+Output:-
+{
+  geoLocation: {
+    Longitude: 70,
+    Latitude: 125
+  }
+}
+
+8. Retrieve all documents from the country collection where the country name contains "L" or starts with "N".
+
+db.Country.find({$or:[{name:{$in:[/^L/]}},{name:{$in:[/^N/]}}]})
+ 
+Practical sheet
+SET – 1
+Collection Name : country
+db.Country.insertMany([
+{
+_id: "62e5288f4d0440f7811d1928",
+name: "United States",
+capital: "Washington, D.C.",
+continent: "North America",
+language: "English",
+population: 328239523,
+},
+{
+_id: "62e5288f4d0440f7811d192b",
+name: "Australia",
+capital: "Canberra",
+continent: "Australia",
+language: "English",
+population: 25681300,
+},
+{
+_id: "62e5288f4d0440f7811d192c",
+name: "Japan",
+capital: "Tokyo",
+continent: "Asia",
+language: "Japanese",
+population: 125960000,
+},
+{
+_id: "62e5288f4d0440f7811d192d",
+name: "Brazil",
+capital: "Brasília",
+continent: "South America",
+language: "Portuguese",
+population: 210147125,
+},
+])
+
+1. Retrieve the documents in country collection where population is greater than 1 lakh.
+→
+db.Country.find({ population: { $gt: 100000000 } })
+
+→OutPut:
+{
+  _id: '62e5288f4d0440f7811d1928',
+  name: 'United States',
+  capital: 'Washington, D.C.',
+  continent: 'North America',
+  language: 'English',
+  population: 328239523
+}
+{
+  _id: '62e5288f4d0440f7811d192c',
+  name: 'Japan',
+  capital: 'Tokyo',
+  continent: 'Asia',
+  language: 'Japanese',
+  population: 125960000
+}
+{
+  _id: '62e5288f4d0440f7811d192c',
+  name: 'Japan',
+  capital: 'Tokyo',
+  continent: 'Asia',
+  language: 'Japanese',
+  population: 125960000
+}
+
+2. Retrieve documents where language is English and continent is Asia.
+
+db.Country.find({ language: "English", continent: "Asia" })
+
+Output:-
+{
+  _id:  ‘62e5288f4d0440f78112e’,
+  name: ‘India’,
+  capital: ‘Delhi’,
+  continent: ‘Asia’,
+  language: ‘English’,
+  population: 210147125 
+}
+
+3. Retrieve documents where capital is “Washington D.C.” and population is either 2 lakhs or 1 lakh
+
+db.Country.find({ capital: " Washington, D.C.", population: { $in: [100000, 328239523] } }) 
+
+Output :
+{
+  _id: '62e5288f4d0440f7811d1928',
+  name: 'United States',
+  capital: 'Washington, D.C.',
+  continent: 'North America',
+  language: 'English',
+  population: 328239523
+}
+
+4. Retrieve documents where country is Australia and population is 125960000
+
+db.Country.find({
+  name: "Australia",
+  population: 25681300
+})
+
+Output:
+{
+  _id: '62e5288f4d0440f7811d192b',
+  name: 'Australia',
+  capital: 'Canberra',
+  continent: 'Australia',
+  language: 'English',
+  population: 25681300
+}
+
+5. Retrieve a document where country name is Australia and not United States.
+
+db.Country.find({
+  name: "Australia",
+  name: { $ne: "United States" }
+})
+
+Output:
+{
+  _id: '62e5288f4d0440f7811d192b',
+  name: 'Australia',
+  capital: 'Canberra',
+  continent: 'Australia',
+  language: 'English',
+  population: 25681300
+}
+{
+  _id: '62e5288f4d0440f7811d192c',
+  name: 'Japan',
+  capital: 'Tokyo',
+  continent: 'Asia',
+  language: 'Japanese',
+  population: 125960000
+}
+{
+  _id: '62e5288f4d0440f7811d192c',
+  name: 'Japan',
+  capital: 'Tokyo',
+  continent: 'Asia',
+  language: 'Japanese',
+  population: 125960000
+}
+
+
+6. Retrieve documents capital is Dubai and Language can be Arabic or English and name is UAE.
+
+db.Country.find({ capital: "Dubai", $or: [ { language: "Abaric" }, { language: "English" } ], name: "UAE" })
+
+Output:-
+{
+  _id: ‘62e5288f4d0441f7811d192e’
+  Name: ‘UAE’,
+  Capital: ‘Dubai’,
+  Continent: ‘Asia’,
+  Language: ‘Arabic’,
+  Population: 31014712
+}
+ 
+SET – 2
+Labsheet Set-2
+
+use World
+db.Item.insertOne({item:"journal",qty:25,size:{h:14,w:21,uom:"cm"},status:"A"})
+db.Item.insertOne({item:"notebook",qty:50,size:{h:8.5,w:11,uom:"in"},status:"A"})
+db.Item.insertOne({item:"paper",qty:100,size:{h:8.5,w:11,uom:"cm"},status:"D"})
+db.Item.insertOne({item:"planner",qty:75,size:{h:22.85,w:30,uom:"cm"},status:"D"})
+db.Item.insertOne({item:"postcard",qty:45,size:{h:10,w:15,uom:"cm"},status:"A"})
+
+1. Retrieve from the inventory collection all documents where status equals “D”. 
+
+db.Item.find({status:{$eq:"D"}})
+
+Output:-
+
+{
+  _id: ObjectId("64e300af28728e29358b3d04"),
+  item: 'paper',
+  qty: 100,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'cm'
+  },
+  status: 'D'
+}
+{
+  _id: ObjectId("64e300db28728e29358b3d05"),
+  item: 'planner',
+  qty: 75,
+  size: {
+    h: 22.85,
+    w: 30,
+    uom: 'cm'
+  },
+  status: 'D'
+}
+
+ 
+2. Retrieve all documents in the inventory collection where status equals “A” or “D”. 
+
+db.Item.find({$or:[{status:{$eq:"A"}},{status:{$eq:"D"}}]})
+
+Output:-
+
+{
+  _id: ObjectId("64e3005a28728e29358b3d02"),
+  item: 'journal',
+  qty: 25,
+  size: {
+    h: 14,
+    w: 21,
+    uom: 'cm'
+  },
+  status: 'A'
+}
+{
+  _id: ObjectId("64e3009428728e29358b3d03"),
+  item: 'notebook',
+  qty: 50,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'in'
+  },
+  status: 'A'
+}
+{
+  _id: ObjectId("64e300af28728e29358b3d04"),
+  item: 'paper',
+  qty: 100,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'cm'
+  },
+  status: 'D'
+}
+{
+  _id: ObjectId("64e300db28728e29358b3d05"),
+  item: 'planner',
+  qty: 75,
+  size: {
+    h: 22.85,
+    w: 30,
+    uom: 'cm'
+  },
+  status: 'D'
+}
+{
+  _id: ObjectId("64e300fc28728e29358b3d06"),
+  item: 'postcard',
+  qty: 45,
+  size: {
+    h: 10,
+    w: 15,
+    uom: 'cm'
+  },
+  status: 'A'
+}
+
+3. Retrieve all documents in the inventory collection where status equals “A” & qty is less than ($lt) 30. 
+
+db.Item.find({$and:[{status:{$eq:"A"}},{qty:{$lt:30}}]})
+
+Output:-
+{
+  _id: ObjectId("64e3005a28728e29358b3d02"),
+  item: 'journal',
+  qty: 25,
+  size: {
+    h: 14,
+    w: 21,
+    uom: 'cm'
+  },
+  status: 'A'
+}
+
+4. Retrieve all documents in inventory collection where item name start with ‘p’ 
+
+db.Item.find({item:{$in:[/^p/]}})
+
+Output:-
+{
+  _id: ObjectId("64e300af28728e29358b3d04"),
+  item: 'paper',
+  qty: 100,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'cm'
+  },
+  status: 'D'
+}
+{
+  _id: ObjectId("64e300db28728e29358b3d05"),
+  item: 'planner',
+  qty: 75,
+  size: {
+    h: 22.85,
+    w: 30,
+    uom: 'cm'
+  },
+  status: 'D'
+}
+{
+  _id: ObjectId("64e300fc28728e29358b3d06"),
+  item: 'postcard',
+  qty: 45,
+  size: {
+    h: 10,
+    w: 15,
+    uom: 'cm'
+  },
+  status: 'A'
+}
+
+5. Retrieve all documents in inventory collection where item height is less than 10. 
+
+db.Item.find({"size.h":{$lt:10}})
+
+Output:-
+{
+  _id: ObjectId("64e3009428728e29358b3d03"),
+  item: 'notebook',
+  qty: 50,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'in'
+  },
+  status: 'A'
+}
+{
+  _id: ObjectId("64e300af28728e29358b3d04"),
+  item: 'paper',
+  qty: 100,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'cm'
+  },
+  status: 'D'
+}
+
+6. Retrieve all documents in inventory collection where item qty is greater than 50. 
+
+db.Item.find({qty:{$gt:50}})
+
+Output:-
+{
+  _id: ObjectId("64e300af28728e29358b3d04"),
+  item: 'paper',
+  qty: 100,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'cm'
+  },
+  status: 'D'
+}
+{
+  _id: ObjectId("64e300db28728e29358b3d05"),
+  item: 'planner',
+  qty: 75,
+  size: {
+    h: 22.85,
+    w: 30,
+    uom: 'cm'
+  },
+  status: 'D'
+}
+
+7. Retrieve all documents in inventory collection where item uom is not equal to ‘cm’ and qty is in [50, 100]. 
+
+db.Item.find({$and:[{"size.uom":{$ne:"cm"}},{qty:{$in:[50,100]}}]})
+
+Output:-
+{
+  _id: ObjectId("64e3009428728e29358b3d03"),
+  item: 'notebook',
+  qty: 50,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'in'
+  },
+  status: 'A'
+}
+
+8. Display the count of status ‘A’ and ‘D’. 
+
+db.Item.find({status:{$in:["A","D"]}}).count()
+
+Output:-
+5
+
+9. Update document by adding production date. 
+
+db.Item.updateOne({item:"journal"},{$set:{productionDate:new ISODate("2020-09-01")}})
+db.Item.updateOne({item:"notebook"},{$set:{productionDate:new ISODate("2020-09-05")}})
+db.Item.updateOne({item:"paper"},{$set:{productionDate:new ISODate("2020-09-10")}})
+db.Item.updateOne({item:"planner"},{$set:{productionDate:new ISODate("2020-09-15")}})
+db.Item.updateOne({item:"postcard"},{$set:{productionDate:new ISODate("2020-09-20")}})
+
+10. Retrieve all documents where item production is in range between 1/09/2020 to 12/09/2020. 
+
+db.Item.find({productionDate:{$gt:new Date("2020-09-01"),$lt:new Date("2020-09-12")}})
+
+Output:-
+{
+  _id: ObjectId("64e3009428728e29358b3d03"),
+  item: 'notebook',
+  qty: 50,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'in'
+  },
+  status: 'A',
+  productionDate: 2020-09-05T00:00:00.000Z
+}
+{
+  _id: ObjectId("64e300af28728e29358b3d04"),
+  item: 'paper',
+  qty: 100,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'cm'
+  },
+  status: 'D',
+  productionDate: 2020-09-10T00:00:00.000Z
+}
+
+11. Retrieve all documents where item production is on 10/09/2020. 
+
+db.Item.find({productionDate:{$eq:new Date("2020-09-10")}})
+
+Output:-
+{
+  _id: ObjectId("64e300af28728e29358b3d04"),
+  item: 'paper',
+  qty: 100,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'cm'
+  },
+  status: 'D',
+  productionDate: 2020-09-10T00:00:00.000Z
+}
+
+12. Update document by adding new field qty total price. 
+
+db.Item.update({item:"journal"},{$set:{TotalPrice:100}})
+db.Item.update({item:"notebook"},{$set:{TotalPrice:200}})
+db.Item.update({item:"paper"},{$set:{TotalPrice:300}})
+db.Item.update({item:"planner"},{$set:{TotalPrice:400}})
+db.Item.update({item:"postcard"},{$set:{TotalPrice:600}})
+
+13. Retrieve all documents production date is 15/09/2020 and total price is greater than 300. 
+
+db.Item.find({$and:[{productionDate:{$eq:new Date("2020-09-15")}},{TotalPrice:{$gt:300}}]})
+
+Output:-
+{
+  _id: ObjectId("64e300db28728e29358b3d05"),
+  item: 'planner',
+  qty: 75,
+  size: {
+    h: 22.85,
+    w: 30,
+    uom: 'cm'
+  },
+  status: 'D',
+  productionDate: 2020-09-15T00:00:00.000Z,
+  TotalPrice: 400
+}
+
+14. Retrieve all documents where total price is in range between [200,500].
+
+db.Item.find({TotalPrice:{$gt:200,$lt:500}})
+
+Output:-
+{
+  _id: ObjectId("64e300af28728e29358b3d04"),
+  item: 'paper',
+  qty: 100,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'cm'
+  },
+  status: 'D',
+  productionDate: 2020-09-10T00:00:00.000Z,
+  TotalPrice: 300
+}
+{
+  _id: ObjectId("64e300af28728e29358b3d04"),
+  item: 'paper',
+  qty: 100,
+  size: {
+    h: 8.5,
+    w: 11,
+    uom: 'cm'
+  },
+  status: 'D',
+  productionDate: 2020-09-10T00:00:00.000Z,
+  TotalPrice: 300
+}
+ 
+SET – 3
+1 - Retrieve documents where the capital is either “Washington D.C.” or “Italy”
+
+db.Country.find(
+ {$or:[{capital:'Washington, D.C.'},{capital:'Italy'}]}
+);
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+2 - Retrieve all the documents where the population is greater than 10 Lakhs and language is English or Japanese or Portuguese.
+
+db.Country.find(
+{$and:[{population:{$gt:1000000}},{$or:[{language:'English'},{language:'Japanese'},{language:'Portuguese'}]}]}
+);
+
+Output :
+
+
+
+
+
+
+
+
+
+
+ 
+3 - Retrieve all the documents where the population is less than 3 Crores and the continent is not Asia or North America or South America.
+
+db.Country.find(
+ {$and:[{population:{$lt:30000000}},{continent:{$nin:['Asia','North America','South America']}}]}
+);
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+4 - Retrieve the first document where the language is Japanese and the continent is Asia and Capital is not Tokyo.
+
+db.Country.findOne(
+ {$and:[{language:'Japanese'},{$and:[{continent:'Asia'},{$nor:[{capital:'Canberra'}]}]}]}
+);
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+ 
+5 - Insert documents having one additional field called geoLocation having two fields like longitude and latitude.
+
+db.Country.updateOne({name:'Japan'},{$set:{'geoLocation.longitude':85,'geoLocation.latitude':95}})
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6 - Retrieve the name of a county where longitude is 0 and less than 90 and latitude greater than 0 and less than 100.
+db.Country.find(
+ {$and:[{'geoLocation.longitude':{$lt:90,$gt:0}},{'geoLocation.latitude':{$lt:100,$gt:0}}]},
+ {name:1,_id:0}
+);
+
+Output :
+
+
+
+
+
+
+7 - Retrieve the geoLocation of countries where continent is “Asia” and language is “English” or “Hindi”
+
+db.Country.find(
+{$and:[{'geoLocation':{$exists:true}},{continent:'Asia'},{$or:[{language:'Hindi'},{language:'English'}]}]}
+);
+
+Output :
+
+\\\
+
+
+ 
+SET – 4
+Set 4:
+ Collection Name: student
+Insert Query:
+
+→ db.student.insertOne({enroll:"ET21MT081",name: "Krish", gender:"male",class:"sem-3",marks: [76,67,89,90,76]});
+
+{
+  _id: ObjectId("64e314fdebd7dbfe760f8345"),
+  enroll: 'ET21MT081',
+  name: 'Krish',
+  gender: 'male',
+  class: 'sem-3',
+  marks: [
+    76,
+    67,
+    89,
+    90,
+    76
+  ]
+}
+
+—> db.student.insertMany([{enroll:"ET21MT115 ",name: "Ajay", gender:"male",class:"sem-3",marks: [67,77,81,79,97]}, 
+
+{enroll:"ET21MT116",name: "Krishna", gender:"female",class:"sem-3",marks: [66,89,87,78,79]},
+{enroll:"ET21MT096",name: "Gokul", gender:"male",class:"sem-3",marks: [76,68,69,90,80]},
+{enroll:"ET21MT079",name: "Aditi", gender:"female",class:"sem-3",marks: [77,78,98,76,90]}
+]);
+
+{
+  _id: ObjectId("64e314fdebd7dbfe760f8346"),
+  enroll: 'ET21MT115',
+  name: 'Ajay',
+  gender: 'male',
+  class: 'sem-3',
+  marks: [
+    67,
+    77,
+    81,
+    79,
+    97
+  ]
+}
+{
+  _id: ObjectId("64e314fdebd7dbfe760f8347"),
+  enroll: 'ET21MT116',
+  name: 'Krishna',
+  gender: 'female',
+  class: 'sem-3',
+  marks: [
+    66,
+    89,
+    87,
+    78,
+    79
+  ]
+}
+{
+  _id: ObjectId("64e314fdebd7dbfe760f8348"),
+  enroll: 'ET21MT096',
+  name: 'Gokul',
+  gender: 'male',
+  class: 'sem-3',
+  marks: [
+    76,
+    68,
+    69,
+    90,
+    80
+  ]
+}
+{
+  _id: ObjectId("64e314fdebd7dbfe760f8349"),
+  enroll: 'ET21MT079',
+  name: 'Aditi',
+  gender: 'female',
+  class: 'sem-3',
+  marks: [
+    77,
+    78,
+    98,
+    76,
+    90
+  ]
+}
+
+ 
+1. Find the Total of all subject marks.
+
+db.student.aggregate([{$addFields: {totalMarks: {$sum: "$marks"}}}])
+
+Output:
+
+{
+  _id: ObjectId("64e6860d1e676d8d1f3fa54a"),
+  enroll: 'ET21MT081',
+  name: 'Krish',
+  gender: 'male',
+  class: 'sem-3',
+  marks: [
+    76,
+    67,
+    89,
+    90,
+    76
+  ],
+  totalMarks: 398
+}
+
+{
+  _id: ObjectId("64e6874a1e676d8d1f3fa54b"),
+  enroll: 'ET21MT115 ',
+  name: 'Ajay',
+  gender: 'male',
+  class: 'sem-3',
+  marks: [
+    67,
+    77,
+    81,
+    79,
+    97
+  ],
+  totalMarks: 401
+}
+
+{
+  _id: ObjectId("64e6874a1e676d8d1f3fa54c"),
+  enroll: 'ET21MT116',
+  name: 'Krishna',
+  gender: 'female',
+  class: 'sem-3',
+  marks: [
+    66,
+    89,
+    87,
+    78,
+    79
+  ],
+  totalMarks: 399
+}
+
+{
+  _id: ObjectId("64e6874a1e676d8d1f3fa54d"),
+  enroll: 'ET21MT096',
+  name: 'Gokul',
+  gender: 'male',
+  class: 'sem-3',
+  marks: [
+    76,
+    68,
+    69,
+    90,
+    80
+  ],
+  totalMarks: 383
+}
+
+{
+  _id: ObjectId("64e6874a1e676d8d1f3fa54e"),
+  enroll: 'ET21MT079',
+  name: 'Aditi',
+  gender: 'female',
+  class: 'sem-3',
+  marks: [
+    77,
+    78,
+    98,
+    76,
+    90
+  ],
+  totalMarks: 419
+}
+
+
+ 
+ 
+2. Calculate percentage for all students and add that percentage field in the collection. 
+
+db.student.aggregate([{$project:{name:1,percentage:{$divide:[{$sum:'$marks'},5]}}}])
+
+Output:-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3. Generate a merit list of all students and display only roll no and name. 
+
+db.Student.aggregate([
+  {
+    $addFields: {
+      totalMarks: { $sum: "$marks" },
+      totalSubjects: { $size: "$marks" },
+      percentage: { $multiply: [{ $divide: ["$totalMarks", "$totalSubjects"] }, 100] }
+    }
+  },
+  {
+    $sort: { percentage: -1 }
+  },
+  {
+    $project: {
+      enroll: 1,
+      name: 1,
+      _id: 0
+    }
+  }
+])
+
+Output:
+{
+  enroll: 'ET21MT081',
+  name: 'Krish'
+}
+{
+  enroll: 'ET21MT115',
+  name: 'Ajay'
+}
+{
+  enroll: 'ET21MT116',
+  name: 'Krishna'
+}
+{
+  enroll: 'ET21MT096',
+  name: 'Gokul'
+}
+{
+  enroll: 'ET21MT079',
+  name: 'Aditi'
+}
+
+4. Display the student name having the highest marks in all subjects as well as individual subjects
+→. 
+db.Student.aggregate([
+  {
+    $addFields: {
+      totalMarks: { $sum: "$marks" }
+    }
+  },
+  {
+    $sort: { totalMarks: -1 }
+  },
+  {
+    $limit: 1 
+  },
+  {
+    $project: {
+      name: 1,
+      marks: 1,
+      _id: 0
+    }
+  }
+])
+→ Output:
+{
+  name: 'Aditi',
+  marks: [
+    77,
+    78,
+    98,
+    76,
+    90
+  ]
+}
+
+5. Count number of failed students. 
+
+db.student.aggregate([ { $match: { $expr: { $lt: [{ $avg: "$marks" }, 50] } } }, { $count: "failedStudents" } ])
+
+
+6. Count the number if passed students.
+
+db.student.aggregate([ { $match: { $expr: { $gte: [{ $avg: "$marks" }, 50] } } }, { $count: "passedStudents" } ]) 
+
+Output :
+
+
+
+
+
+
+
+
+ 7. Display the Subject wise passed and failed students.
+
+db.Student.updateOne({name: "Krish"}, {$set:{marks:[76,67,33,20,76]}});
+db.Student.aggregate([
+  {
+    $addFields: {
+      passedSubjects: {
+        $filter: {
+          input: "$marks",
+          as: "mark",
+          cond: { $gte: ["$$mark", 40] } 
+        }
+      },
+      failedSubjects: {
+        $filter: {
+          input: "$marks",
+          as: "mark",
+          cond: { $lt: ["$$mark", 40] } 
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      name: 1,
+      enroll: 1,
+      passedSubjects: { $size: "$passedSubjects" },
+      failedSubjects: { $size: "$failedSubjects" },
+      _id: 0
+    }
+  }
+])
+
+Output:
+{
+  enroll: 'ET21MT081',
+  name: 'Krish',
+  passedSubjects: 3,
+  failedSubjects: 2
+}
+{
+  enroll: 'ET21MT115',
+  name: 'Ajay',
+  passedSubjects: 5,
+  failedSubjects: 0
+}
+{
+  enroll: 'ET21MT116',
+  name: 'Krishna',
+  passedSubjects: 5,
+  failedSubjects: 0
+}
+{
+  enroll: 'ET21MT096',
+  name: 'Gokul',
+  passedSubjects: 5,
+  failedSubjects: 0
+}
+
+  enroll: 'ET21MT079',
+  name: 'Aditi',
+  passedSubjects: 5,
+  failedSubjects: 0
+}
+
+ 8. Display the count of "male" and "female" students.
+
+db.Student.aggregate([
+  {
+    $group: {
+      _id: "$gender",
+      count: { $sum: 1 }
+    }
+  }
+])
+
+Output:
+
+{
+  _id: 'male',
+  count: 3
+}
+{
+  _id: 'female',
+  count: 2
+}
+ 
+SET – 5
+Collection Name: Courses
+db.Courses.insertMany([
+{
+_id:1,
+name:"NOSQL",
+fees:2000,
+hours:[10,11,12]
+},
+{
+_id:2,
+name:"Cloud Computing",
+fees:7000,
+hours:[10,15]
+},
+{
+_id:3,
+name:"Data Structure",
+fees:5000,
+hours:[10,14,20]
+}
+])
+
+1. Find the documents which have both values 10 and 11 in hours.
+
+db.Courses.find({
+ hours: { $all: [10, 11] }
+})
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+2. Find the documents which have 3 elements in hours values.
+
+db.Courses.find({
+ hours: { $size: 3 }
+})
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+3. Find the documents which have hours values that are greater than equal to 11 and less than 15.
+
+db.Courses.find({
+ hours: { $gte: 11, $lt: 15 }
+})
+
+Output :
+
+ 
+4. Add filed trainer with first name and last name.
+
+db.Courses.updateMany({}, [{ $set: { trainer: { firstName: "John",
+ lastName: "Doe" } } }])
+
+Output :
+
+
+
+
+
+
+
+
+
+
+
+5. Find all the documents with trainer name Asha and display the total hours for each course.
+
+db.Courses.aggregate([
+ {
+ $match: {
+ "trainer.firstName": "Asha"
+ }
+ },
+ {
+$group: {
+ _id: "$name",
+ totalHours: { $sum: "$hours" }
+ }
+ }
+])
+
+Output :
+
+ 
+6. Find documents for trainer name Reena and display total fees for each course ( in use aggregate method.)
+
+db.Courses.aggregate([
+ {
+ $match: {
+ "trainer.firstName": "Reena"
+ }
+ },
+ {
+ $group: {
+ _id: "$name",
+ totalFees: { $sum: "$fees" }
+ }
+ }
+])
+
+Output :
+
+
+
+
+
+
+
+
+ 
+7. Find documents having highest hours and lowest hours.
+
+db.Courses.aggregate([
+ {
+ $group: {
+ _id: null,
+ maxHours: { $max: "$hours" },
+ minHours: { $min: "$hours" }
+ }
+ }
+])
+
+Output :
+
+
+
+
+
+
+ 
+8. Find the highest paid trainer.
+
+db.Courses.aggregate([
+ {
+ $group: {
+ _id: "$trainer",
+ maxFees: { $max: "$fees" }
+             }
+},
+{
+$sort: { maxFees: -1 }
+},
+ {
+ $limit: 1
+ }
+])
+
+Output :
+
+
+
+
+
+
+
+
+
+
+ 
+9. Find an average paid trainer.
+
+db.Courses.aggregate([
+ {
+ $group: {
+ _id: "$trainer",
+ avgFees: { $avg: "$fees" }
+ }
+ }
+])
+
+Output :
+
+
+
+===================================================
+
+
+db.collection.updateMany({}, {$set:{"new_field": 10}}) 
+
+
+===================================================
+
+db.student.insertMany([
+{enroll:"ET22",name:"nirmal",marks:[66,78,45,34],size:{h:22,w:25}}
+
+
+])
+
+==================================================
+
+//find the document which have both values 10 and 11  in mongodb query
+
+db.yourCollection.find({
+  yourArray: { $all: [10, 11] }
+})
+
+====================================================
+
+//find the documents which have 3 elements in hours  values
+
+
+db.yourCollection.find({
+  hours: { $size: 3 }
+})
+
+===================================================
+
+//find the documents which have hours value that are greater than or equal to 11 or less than 15
+
+db.yourCollection.find({
+  $or: [
+    { hours: { $gte: 11 } },
+    { hours: { $lt: 15 } }
+  ]
+})
+
+
+====================================================
+
+//add field Trainer with firstname and lastname in course collection
+
+
+db.course.updateMany(
+  {},
+  {
+    $set: {
+      Trainer: {
+        firstname: "John",
+        lastname: "Doe"
+      }
+    }
+  }
+)
+
+
+=================================================
+
+//find the documents for trainer named asha and display total hours for her each course
+
+db.yourCollection.aggregate([
+  {
+    $match: {
+      "Trainer.firstname": "Asha"
+    }
+  },
+  {
+    $group: {
+      _id: "$CourseName", // Group by course name
+      totalHours: { $sum: "$hours" } // Calculate the sum of hours for each course
+    }
+  }
+])
+
+
+
+db.yourCollection.find().sort({ salary: -1 }).limit(1)
+
+db.yourCollection.find().sort({ salary: 1 }).limit(1)
+
+
+db.yourCollection.aggregate([
+  {
+    $group: {
+      _id: null,
+      maxSalary: { $max: "$salary" },
+      minSalary: { $min: "$salary" }
+    }
+  }
+])
+
+
+db.yourCollection.countDocuments({ salary: 50000 })
+
+
+
+db.yourCollection.aggregate([
+  {
+    $group: {
+      _id: null,
+      totalSalary: { $sum: "$salary" }
+    }
+  }
+])
+
