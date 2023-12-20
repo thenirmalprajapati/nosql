@@ -1,3 +1,816 @@
+NoSql Database Practical Examination
+SET 2
+
+1.	Create the Simple department collection. 
+ -> db.createCollection (‘department’)
+ ->db.department.find()
+ 
+ 2.	Insert the above documents into the department collection.
+ ->db.department.insertMany([{ "dept_no":10,
+ "dept_name":"Account",
+ "location":["Surat","Bombay"]
+},
+{
+}
+
+3.Display all documents of Department collection ascending order of dept_name
+db.department.find({}).sort({"dept_name":1})
+db.order.find({}).sort({"order_date":1})
+
+4.Insert documents having one additional field called total_salary having two fields like total_days and amt.
+db.department.updateMany(
+{ },
+{ $set: { "total_salary": { "total_days": 10, "amt": 10000 } } }
+)
+
+5.List all dept_name starting with 'A'. 
+db.department.find({"dept_name":{$regex:"^A"}})
+
+6.Display all documents in descending order of name.
+db.student.find({}).sort({"name":-1})
+
+7.Display student names whose address is surat. 
+db.student.find({"city":"Surat"},{"name":1,"_id":0})
+
+8.Display the details of employee who are having the word ‘ta’ in there name. 
+db.employee.find({"name":{$regex:".*ta*.",$options:'i'}})
+
+9.Display the documents continent wise and having highest population.
+db.city.aggregate([
+{14.
+$group:{
+"_id":{"continent":"$continent","name":"$name"}, "highest_population":{$max:"$population"}, "first_city":{$first:"$name"}, "cities_top_20":{$sum:1}
+}
+}
+ 
+])
+
+10.Find the costliest order.
+db.order.find({},{"item_name":1,"order_value":1,"_id":0}).sort({"order_value":1})
+
+11.Display the details of employee having word developer
+db.employee.find({"title":{$regex:"developer"}}) 
+
+12.Display the details of employee who are software engineer case in sensitive
+db.employee.find({"title":{$regex:"software engineer",$options:'i'}})
+
+13.Display the details of employee whose name starts with ‘B’.
+db.employee.find({"name":{$regex:"^B",$options:'i'}})
+
+Update orders collection by adding “order_total_amount” which contains value calculated from order_list and price_per_qty fields.
+
+db.orders.updateMany({}, [
+  {
+    $set: {
+      order_total_amount: {
+        $sum: {
+          $map: {
+            input: "$order_list",
+            as: "item",
+            in: { $multiply: ["$$item.qty", "$price_per_qty"] }
+          }
+        }
+      }
+    }
+  }
+]);
+
+
+1. Display the number of customers in each country. 
+db.customer.aggregate([
+  {
+    $group: {
+      _id: "$location.country",
+      numberOfCustomers: { $sum: 1 }
+    }
+  }
+]);
+
+
+
+
+
+2. Display the order details which are placed in the month of Nov. 
+db.orders.find({
+  $expr: {
+    $eq: [{ $month: "$order_date" }, 11]
+  }
+});
+
+
+
+3. Display customer-wise total amount. 
+db.orders.aggregate([
+  {
+    $group: {
+      _id: "$cust_id",
+      totalAmount: { $sum: "$order_total_amount" }
+    }
+  }
+]);
+
+
+
+
+4. List the names of customers whose orders are in 2020.
+db.customer.find({
+  "cust_id": { $in: db.orders.distinct("cust_id", { "order_date": { $gte: ISODate("2020-01-01"), $lt: ISODate("2021-01-01") } }) }
+}, { "cust_name": 1, "_id": 0 });
+
+
+
+5. Update the customer collection by adding a gender field to it.
+db.customer.updateMany({}, { $set: { gender: "Unknown" } });
+
+
+
+6. Display details of the highest order placed by customer.
+db.orders.aggregate([
+  {
+    $group: {
+      _id: "$cust_id",
+      highestOrder: { $max: "$order_total_amount" }
+    }
+  }
+]);
+
+
+
+
+7. Drop contact from customer collection.
+db.customer.updateMany({}, { $unset: { contact: 1 } });
+
+
+
+8. Display fruit-wise order_total_amount in descending order.
+db.orders.aggregate([
+  {
+    $unwind: "$order_list"
+  },
+  {
+    $group: {
+      _id: "$order_list.item",
+      totalAmount: { $sum: "$order_total_amount" }
+    }
+  },
+  {
+    $sort: { totalAmount: -1 }
+  }
+]);
+
+
+
+
+
+------------------------------------------------------
+
+Update members collection by adding net_salary field which contains the value from gross 
+and tax.
+db.members.updateMany({}, [
+  {
+    $set: {
+      net_salary: { $subtract: ["$salary.gross", "$salary.tax"] }
+    }
+  }
+]);
+
+
+
+
+
+1.Display area wise branches in ascending order.
+db.branch.find().sort({"area.floor": 1, "area.building": 1});
+
+
+
+2.Display branch where more than one member work.
+db.members.aggregate([
+  {
+    $group: {
+      _id: "$branch_no",
+      memberCount: { $sum: 1 }
+    }
+  },
+  {
+    $match: {
+      memberCount: { $gt: 1 }
+    }
+  }
+]);
+
+
+
+3.List the details of members branch-wise net salary.
+db.members.aggregate([
+  {
+    $set: {
+      net_salary: { $subtract: ["$salary.gross", "$salary.tax"] }
+    }
+  },
+  {
+    $group: {
+      _id: "$branch_no",
+      members: {
+        $push: {
+          member_no: "$member_no",
+          member_name: "$member_name",
+          net_salary: "$net_salary"
+        }
+      }
+    }
+  }
+]);
+
+
+
+
+4.List the names of branches having highest members.
+db.members.aggregate([
+  {
+    $group: {
+      _id: "$branch_no",
+      memberCount: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { memberCount: -1 }
+  },
+  {
+    $limit: 1
+  },
+  {
+    $lookup: {
+      from: "branch",
+      localField: "_id",
+      foreignField: "branch_no",
+      as: "branchDetails"
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      branch_name: "$branchDetails.branch_name",
+      memberCount: 1
+    }
+  }
+]);
+
+
+
+5.List member details whose net salary is greater than 35000.
+db.members.aggregate([
+  {
+    $set: {
+      net_salary: { $subtract: ["$salary.gross", "$salary.tax"] }
+    }
+  },
+  {
+    $match: {
+      net_salary: { $gt: 35000 }
+    }
+  }
+]);
+
+
+
+
+6.List member details whose branch is ‘MCA’. 
+db.members.find({ branch_no: 'B3' });
+
+
+
+7.Rename field member_no to faculty_no and member_name to faculty_name.
+db.members.updateMany({}, {
+  $rename: {
+    "member_no": "faculty_no",
+    "member_name": "faculty_name"
+  }
+});
+
+
+
+8. Display branches which are on the same floor
+db.branch.aggregate([
+  {
+    $group: {
+      _id: "$area.floor",
+      branches: { $push: "$branch_name" }
+    }
+  },
+  {
+    $match: {
+      branches: { $size: { $gt: 1 } }
+    }
+  }
+]);
+
+
+
+
+
+----------------------------------------------------------------------------------
+
+1. Find the document wherein the student name is “Ajay Rathod”.
+db.students.find({ studentName: "Ajay Rathod" })
+
+2. Find all documents in proper format. (Without _id field)
+db.student.find({}, { "_id": 0 });
+
+3. Retrieve only Student Name and Division.
+db.students.find({}, { studentName: 1, "class.div": 1, _id: 0 })
+
+
+4. Display only student names who has more than two hobbies.
+db.students.find({ hobbies: { $size: { $gt: 2 } } }, { studentName: 1, _id: 0 })
+
+
+5. Display section wise total students count.
+db.studentDetail.aggregate([
+  { $group: { _id: "$class.section", totalStudents: { $sum: "$totalStud" } } }
+])
+
+
+
+6. Find those documents where the Division is set to ‘D’.
+db.studentDetail.find({ "class.div": "D" })
+
+7. Find those documents where the Hobbies is set to either ‘Chess’ or ‘Dancing”.
+db.student.find().sort({ "studentName": 1 });
+
+
+8. Sort the documents in ascending order of student name.
+
+db.students.find().sort({ studentName: 1 })
+
+
+
+Q-2 Update student collection by adding “percentage” with a proper value for all documents.
+
+
+db.students.updateMany({}, { $set: { percentage: 80 } })
+
+
+Q-3 Update studentDetail by adding a field in classTeacher.
+
+db.studentDetail.updateMany({}, { $set: { classTeacher: "Mr. XYZ" } })
+
+
+------------------------------
+/ Update movies collection by adding "duration" field
+db.movies.updateMany({}, { $set: { "duration": "" } });
+
+
+
+
+
+1. Retrieve all movies released in January.
+db.show.find({ "relaseDate": { $gte: ISODate("2023-01-01"), $lt: ISODate("2023-02-01") } }, { "_id": 0, "movieId": 1 });
+
+2. Retrieve all documents with language set to “Hindi”
+db.movies.find({ "language": "Hindi" }, { "_id": 0 });
+
+
+3. Retrieve all documents where actors start with “K%”.
+db.movies.find({ "actor": /^K/ }, { "_id": 0 });
+
+
+4. Add an actor named “Samuel L. Jackson” to the movie “Pulp Fiction”
+db.movies.updateOne({ "movieName": "Pulp Fiction" }, { $push: { "actor": "Samuel L. Jackson" } });
+
+
+5. Delete the movie “Pee Wee Herman’s Big Adventure”.
+db.movies.deleteOne({ "movieName": "Pee Wee Herman’s Big Adventure" });
+
+
+6. Sort movie by movie name.
+db.movies.find().sort({ "movieName": 1 });
+
+
+7. Retrieve total shows of movie ‘Kesari”.
+db.show.aggregate([
+  { $match: { "movieId": "M102" } },
+  { $group: { _id: null, totalShows: { $sum: "$totalShow" } } }
+]);
+
+
+8. Display all movie total show count.
+db.show.aggregate([
+  { $group: { _id: "$movieId", totalShows: { $sum: "$totalShow" } } }
+]);
+
+
+
+Update Show collection by adding seats {type, price} type can be silver or gold or
+platinum. E.g.. {“silver”,120}
+
+db.show.updateMany({}, { $set: { seats: [{ type: "silver", price: 120 }, { type: "gold", price: 150 }, { type: "platinum", price: 200 }] } });
+
+
+-----------------------------------------------------------------
+
+1 - Find the Total of all subject marks.
+db.student.aggregate([{$project:{name:1,total_marks:{$sum:'$marks'}}}])
+
+Output : 
+ 
+ 
+2 - Calculate percentage for all students and add that percentage field in the collection. 
+db.student.aggregate([{$project:{name:1,percentage:{$divide:[{$sum:'$marks'},5]}}}])
+
+Output : 
+ 
+
+3 - Generate a merit list of all students and display only roll no and name. 
+db.student.aggregate([{$project:{enroll:1,name:1,percentage:{$divide:[{$sum:'$marks'},5]}}},{$sort:{percentage:-1}}])
+
+Output : 
+ 
+
+4 - Display the student name having the highest marks in all subjects as well as individual subjects. 
+db.student.aggregate([
+    {
+        $unwind: "$marks"
+    },
+    {
+        $group: {
+            _id: "$_id",
+            maxMarks: { $max: "$marks" },
+            studentName: { $first: "$name" }
+        }
+    },
+    {
+        $sort: { maxMarks: -1 }
+    },
+    {
+        $limit: 1
+    },
+    {
+        $project: {
+            _id: 0,
+            studentName: 1,
+            maxMarks: 1
+        }
+    }
+])
+
+Output : 
+ 
+
+5-  Count the number of failed students. 
+db.student.aggregate([
+    {
+        $match: {
+            $expr: { $lt: [{ $avg: "$marks" }, 50] }
+        }
+    },
+    {
+        $count: "failedStudents"
+    }
+])
+
+Output : 
+
+6 - Count the number of passed students. 
+db.student.aggregate([
+    {
+        $match: {
+            $expr: { $gte: [{ $avg: "$marks" }, 50] }
+        }
+    },
+    {
+        $count: "passedStudents"
+    }
+])
+
+Output : 
+ 
+
+7 - Display the Subject wise passed and failed students.
+db.student.aggregate([
+    {
+        $unwind: "$marks"
+    },
+    {
+        $project: {
+            _id: 0,
+            enroll: 1,
+            name: 1,
+            subject: { $toString: { $indexOfArray: ["$marks", "$marks"] } },
+            pass: { $cond: { if: { $gte: ["$marks", 50] }, then: 1, else: 0 } }
+        }
+    },
+    {
+        $group: {
+            _id: {
+                enroll: "$enroll",
+                name: "$name",
+                subject: "$subject"
+            },
+            passed: { $sum: "$pass" },
+            total: { $sum: 1 }
+        }
+    },
+    {
+        $project: {
+            enroll: "$_id.enroll",
+            name: "$_id.name",
+            subject: "$_id.subject",
+            passed: 1,
+            total: 1,
+            failed: { $subtract: ["$total", "$passed"] }
+        }
+    }
+])
+
+Output : 
+
+8 - Display the count of "male" and "female" students.
+db.student.aggregate([
+	{$project: {
+    male: {$cond: [{$eq: ["$gender", "male"]}, 1, 0]},
+    female: {$cond: [{$eq: ["$gender", "female"]}, 1, 0]},
+  }},
+  {$group: { _id: null, male: {$sum: "$male"},
+                        female: {$sum: "$female"},
+                        total: {$sum: 1},
+  }},
+])
+
+db.student.aggregate([
+    {
+        $group: {
+            _id: "$gender",
+            count: { $sum: 1 }
+        }
+    }
+])
+
+6. Find documents for trainer name Reena and display total fees for each course ( in use aggregate method.)
+db.Courses.aggregate([
+    {
+        $match: {
+            "trainer.firstName": "Reena"
+        }
+    },
+    {
+        $group: {
+            _id: "$name",
+            totalFees: { $sum: "$fees" }
+        }
+    }
+])
+
+Output : 
+ 
+
+7. Find documents having highest hours and lowest hours.
+db.Courses.aggregate([
+    {
+        $group: {
+            _id: null,
+            maxHours: { $max: "$hours" },
+            minHours: { $min: "$hours" }
+        }
+    }
+])
+
+Output : 
+ 
+
+8. Find the highest paid trainer.
+db.Courses.aggregate([
+    {
+        $group: {
+            _id: "$trainer",
+            maxFees: { $max: "$fees" }
+        }
+    },
+    {
+        $sort: { maxFees: -1 }
+    },
+    {
+        $limit: 1
+    }
+])
+
+Output : 
+
+
+
+9. Find an average paid trainer.
+db.Courses.aggregate([
+    {
+        $group: {
+            _id: "$trainer",
+            avgFees: { $avg: "$fees" }
+        }
+    }
+])
+3 . Calculate total quantity.
+db.orders.aggregate([
+   {
+      $group: {
+         _id: null,
+         totalQuantity: { $sum: "$quantity" }
+      }
+   }
+])
+
+Output : 
+ 
+
+4 . Calculate name wise total quantity.
+db.orders.aggregate([
+   {
+      $group: {
+         _id: "$name",
+         totalQuantity: { $sum: "$quantity" }
+      }
+   }
+])
+
+Output : 
+ 
+
+5 . Calculate total order value and average order quantity.
+db.orders.aggregate([
+   {
+      $group: {
+         _id: null,
+         totalOrderValue: { $sum: { $multiply: ["$price", "$quantity"] } },
+         averageQuantity: { $avg: "$quantity" }
+      }
+   }
+])
+
+Output : 
+4 . Display the documents continent wise.
+db.cities.aggregate([
+    {
+        $group: {
+            _id: { continent: "$continent", country: "$country" },
+            highest_population: { $max: "$population" },
+            city: { $first: "$name" }
+        }
+    }
+]);
+ 
+Output :
+ 
+
+5 . Display the documents continent wise and having highest population.
+db.cities.aggregate([
+    {
+        $group: {
+            _id: { continent: "$continent", country: "$country" },
+            highest_population: { $max: "$population" },
+            first_city: { $first: "$name" },
+            cities_in_top_20: { $sum: 1 }
+        }
+    }
+]);
+
+
+===========================================
+
+NOSQL FILE
+
+
+3. Display all documents of Department collection ascending order of dept_name.
+→
+db.department.find().sort({dept_name:1})
+
+4. Display all details of department belonging to location ‘Bombay’.
+→
+db.department.find({location:"Bombay"})
+
+
+5. Display details of dept_no 10.
+→
+db.department.find({dept_no:10})
+
+6. List all dept_name starting with 'A'.
+→
+db.department.find({dept_name:/^A/})
+
+7. Insert documents having one additional field called total_salary having two fields like total_days and amt.
+→
+db.department.updateMany({},{$set:{total_salary:[{total_days:20,amt:5000}]}})
+
+
+4. Display student names whose address is surat.
+→
+db.Student.find({ city: "Surat" }, { name: 1, _id: 0 })
+
+5. Display the student name(s) whose merit are between 50 and 150.
+→
+db.Student.find({ merit: { $gte: 50, $lte: 150 } }, { name: 1, _id: 0 })
+
+6. Display all documents having more than two subjects.
+→
+db.Student.find({ $where: "this.subjects.length > 2" })
+
+7. Add fields like category and grade. E.g. category: EWS, TFW, OBC and graduation AA, AB , BB etc for all documents.
+→
+db.Student.updateMany({},{$set:{category:{$in:["EWS","TFW","OBC"]},grade:{$in:["AA","AB","BB"]}}})
+
+3. Display all documents in descending order of rating.
+→
+db.Movie.find().sort({ rating: -1 })
+
+4. Display movie names whose director is Ashutosh Gowariker.
+→
+db.Movie.find({ directors: "Ashutosh Gowariker" }, { name: 1, _id: 0 })
+
+5. Display the director name(s) whose movie ratings are between 6 and 8.
+→
+db.Movie.distinct("directors",{$and: [{ rating: { $gte: 6 } },{ rating: { $lte: 8 } }]})
+
+6. Display all documents having more than one directors.
+→
+db.Movie.find({ $where: "this.directors.length > 1" })
+
+7. Add fields like category and duration. E.g. category: drama, crime and duration 125 mins for all documents.
+→
+db.Movie.updateMany({},{$set: {category: { $in: ["drama", "crime"] },duration: 125}})
+
+3. Display all documents in descending order of cust_no.
+→
+db.Customer.find().sort({ cust_no: -1 })
+
+4. Display the cust_name of customers which are in VALSAD AND SURAT.
+→
+db.Customer.find({address:{$in:["VALSAD","SURAT"]}},{cust_name:1,_id:0})
+
+5. List all document whose cust_phone starts with ‘9’.
+→
+db.Customer.find({ cust_phone: /^9/ })
+
+6. Insert documents having one additional field called bill_amt having two fields like qty and price.
+→
+db.Customer.updateMany({},{$set: {bill_amt: { qty: 0, price: 0 }}})
+
+3. Calculate total quantity.
+→
+db.Order.aggregate([{$group: {_id: null,totalQuantity: { $sum: "$Quantity" }}}])
+
+4. Calculate name wise total quantity.
+→
+db.Order.aggregate([{$group: { _id: "$Name",totalQuantity: { $sum: "$Quantity" }}}])
+
+5. Calculate total order value and average order quantity.
+→
+db.Order.aggregate([{$group:{_id:null,totalOrderValue:{$sum:"$Order_value"},averageOrderQuantity: { $avg: "$Quantity" } }}])
+
+6. Find documents having latest order.
+→
+db.Order.find().sort({ Order_date: -1 }).limit(1)
+
+7. Find documents for which order is place first.
+→
+db.Order.find().sort({ Order_date: 1 }).limit(1)
+
+8. Find the costliest order.
+→
+db.Order.find().sort({ Order_value: -1 }).limit(1)
+
+9. Find the cheapest order.
+→
+db.Order.find().sort({ Order_value: 1 }).limit(1)
+
+10. Which item of name repeatedly place.
+→
+db.Order.aggregate([{$group: {_id: "$Item_name",count: { $sum: 1 }}},{$match: {count: {$gt: 1 }}}])
+
+3. Display cities which is in north America continent and ascending order of population.
+→
+db.City.find({ Continent: "North America" }).sort({ population: 1 })
+
+4. Display the documents continent wise.
+→
+db.City.aggregate([{$group: {_id: "$Continent",cities: { $push: "$$ROOT" }}}])
+
+5. Display the documents continent wise and having highest population.
+→
+db.City.aggregate([{$group: {_id: "$Continent",maxPopulationCity: {$max: {population: "$population",name: "$Name"}}}}])
+
+2. Display the details of employee who are software engineer case in sensitive.
+→
+db.Employee.find({ Title: { $regex: /Software Engineer/i } })
+
+3. Display the details of employee whose name starts with ‘B’.
+→
+db.Employee.find({ Name: /^B/ })
+
+4. Display the details of employee whose name ends with ‘A’.
+→
+db.Employee.find({ Name: { $regex: /A$/, $options: 'i' } })
+
+5. Display the details of employee who are having the word ‘ta’ in there name.
+→
+db.Employee.find({ Name: { $regex: /ta/i } })
+
+
 Data Set Query – 1
 
 1. find document from country collection where population is less then 2 c.
